@@ -12,38 +12,57 @@ output:
 ```{r include=FALSE,echo=FALSE}
 require(tigerstats)
 require(tidyverse)
+library(readr)
+Fish <- read_csv("Fish.csv") 
+  Species <- as.factor(Fish$Species)
+Perch <- subset(Fish,Species=="Perch")
+  Perch <- select(Perch, -Species)
+Bream <- subset(Fish,Species=="Bream")
+  Bream <- select(Bream, -Species)
+Smelt <- subset(Fish,Species=="Smelt")
+  Smelt <- select(Smelt, -Species)
 ```
 
-# Introduction
-
+# Perch model. 
 <!--In this section you explain what you are trying to show.  Where did the data come from?  What is the research or other question you are trying to answer?!-->
 
-## Build the best regression model you can that predicts the weight of perch
-## Using only two predictor variables  
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Perch,
+               nbest = 1,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
 
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+According to the automation, the best 2 variables for predicting Weight are Height and Width.  
+```{r}
+which.max(summary.out$adjr2)
+```
+  The model with those 2 variables has the greatest Adjusted R-squared, meaning it explains the greatest percentage of the data in Perch.  
+```{r}
+best.model <- lm(Weight~ Height + Width,data=Perch)
+summary(best.model)
+```
+## Results
+## Inferential Results.
 
-# Methods
+# Bream model.  
+```{r}
 
-<!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method.!-->
+```
+## Results
+## Inferential Results.
 
-#Results
-
-<!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
-
-## Descriptive Results
-
-### Graphical Descriptive Results
-
-<!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question!-->
-
-### Numerical Descriptive Results
-
-<!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
-
-## Inferential Results
-
-<!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
-
+# Smelt model. 
+## Results
+## Inferential Results.
 
 # Discussion and Conclusion
 
