@@ -119,7 +119,7 @@ The total sum of squares ("Sum of Sq" above) subtracts the variation accounted f
 MODL0 has the greatest RSS and is thus the most error- prone; fullup (using every available variable) is the least error- prone.  
 Normally, a higher sum of squares means there's more variability from the mean value. However, when comparing 2 models in anova, it has an additional meaning:   MODL0 and MODL2 are the closest to each other, while MODL0 and fullup are the least similar. This is because sum of squares can be calculated as the difference (from subtraction) between the RSS values of each model. Using the first comparison as an example:  
 (RSS of MODL2) - (RSS of fullup) = Sum of Squares, when taking into account rounding errors.  
-However, high p-values (greater than 0.4) suggest there is no significant difference between fullup and MODL2, nor between fullup and MODL0
+However, fairly high p-values (greater than 0.4) suggest there is no significant difference between fullup and MODL2, and brings into question the difference in effectiveness between fullup and MODL0. Assuming the difference (in effectiveness) between a 2- variable and all- variable model is insignificant, the model with fewer variables should be chosen.  
 ```{r}
 SumofSquares = 90244 - 84438
 print(SumofSquares)
@@ -146,6 +146,8 @@ subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2
 ```
   
 According to the graphic, L2-W is the best 2- variable model. To double- check this, L2-W will be compared with L2-H, H-W, and fullup.  
+
+### Manual results.  
 ```{r}
 fullup <- lm(Weight~ .,data=Smelt)
 summary.lm(fullup)
